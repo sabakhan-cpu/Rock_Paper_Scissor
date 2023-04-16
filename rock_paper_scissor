@@ -1,0 +1,122 @@
+from tkinter import *
+import random
+from PIL import ImageTk, Image
+
+bg_color = "#3d6466"
+comp_score = 0
+human_score = 0
+
+"""setting up the window"""
+window = Tk()
+window.title(" WELCOME TO ROCK PAPER SCISSOR GAME")
+window.eval("tk::PlaceWindow . center")
+window.geometry("600x500")
+window.config(bg=bg_color)
+
+"""getting canvas"""
+canvas = Canvas(width=1000, height=700, bg=bg_color, highlightthickness=2)
+canvas.pack()
+
+"""getting frames"""
+frame1 = Frame(canvas, width=300, height=400, bg="#28393a", highlightthickness=5)
+frame1.place(x=60, y=70)
+frame2 = Frame(canvas, width=300, height=400, bg="#28393a", highlightthickness=5)
+frame2.place(x=630, y=70, anchor='nw')
+frame1.pack_propagate(False)
+
+"""decision"""
+
+
+def decision(img1, img2):
+    global var1
+    global var2
+
+    var1 = img1.split(".")[0]
+
+    var2 = img2.split(".")[0]
+    if var1 == var2:
+
+        return 'var'
+    elif var1 == 'scissor' and var2 == 'paper':
+        return var1
+    elif var1 == 'scissor' and var2 == 'rock':
+        return var2
+    elif var1 == 'paper' and var2 == 'rock':
+        return var1
+    elif var1 == 'paper' and var2 == 'scissor':
+        return var2
+    elif var1 == 'rock' and var2 == 'scissor':
+        return var1
+    elif var1 == 'rock' and var2 == 'paper':
+        return var2
+
+
+"""getting image on the frame1"""
+
+
+def image_fetch():
+    global comp_score
+    global human_score
+
+    image_list = ["paper.png", 'scissor.png', 'rock.png']
+    selected_image1 = random.choice(image_list)
+    print(selected_image1)
+    image1 = ImageTk.PhotoImage(file=selected_image1)
+    logo_widget = Label(frame1, image=image1, width=200, height=300)
+    logo_widget.image = image1
+    logo_widget.place(x=40, y=50)
+
+    """getting image on the frame 2"""
+    selected_image2 = random.choice(image_list)
+    image2 = ImageTk.PhotoImage(file=selected_image2)
+    logo_widget2 = Label(frame2, image=image2, width=200, height=300)
+    logo_widget2.image = image2
+    logo_widget2.place(x=250, y=50, anchor='ne')
+
+    if decision(selected_image1, selected_image2) == var1:
+        label_result.config(text="Computer Wins!")
+        comp_score += 1
+        label_score_comupter.config(text=f"Total Score :{comp_score}")
+    elif decision(selected_image1, selected_image2) == 'var':
+        label_result.config(text="        Draw!")
+    else:
+        label_result.config(text="   Human Wins!")
+        human_score += 1
+        label_score_human.config(text=f"Total Score :{human_score}")
+
+
+"""getting LABELs"""
+label_heading = Label(canvas, text="ROCK PAPER SCISSOR")
+label_heading.config(fg="#28393a", bg=bg_color, font=("Ariel", 20, 'bold'))
+label_heading.place(x=340, y=25)
+"""getting computer/human label"""
+label_comp = Label(frame1, text="COMPUTER")
+label_comp.config(fg=bg_color, bg="#28393a", font=("Arial", 18, 'italic'))
+label_comp.place(x=60, y=354)
+
+label_human = Label(frame2, text="HUMAN")
+label_human.config(fg=bg_color, bg="#28393a", font=("Arial", 18, 'italic'))
+label_human.place(x=95, y=354)
+
+label_result = Label(canvas, text="", bg=bg_color, fg="OrangeRed4", font=("Arial", 25, "bold"), anchor="center")
+label_result.place(x=360, y=460)
+
+label_score_comupter = Label(canvas, text=f"Total Score : {comp_score}", fg="OrangeRed4", bg=bg_color,
+                             font=("Georgia", 20, "bold"))
+label_score_comupter.place(x=105, y=500)
+label_score_human = Label(canvas, text=f"Total Score : {human_score}", fg="OrangeRed4", bg=bg_color,
+                          font=("Georgia", 20, "bold"))
+label_score_human.place(x=675, y=500)
+"""getting the buttons"""
+play_button = Button(canvas, text="PLAY", width=20, height=3, bg="gray50"
+                     , activebackground='gray', relief='ridge', font=('Georgia', 10, 'bold'), command=image_fetch)
+play_button.place(x=400, y=550)
+
+"""creating function to track the current cursor"""
+# def motion(event):
+#     print(f"current position of cursor is ({event.x},{event.y})")
+#     return
+# canvas.bind('<Motion>',motion)
+
+
+window.mainloop()
